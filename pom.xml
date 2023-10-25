@@ -114,6 +114,10 @@
             <id>sqlite</id>
             <url>https://oss.sonatype.org/content/repositories/releases/org/xerial/sqlite-jdbc/</url>
         </repository>
+        <repository>
+            <id>central</id>
+            <url>https://repo.loverfella.com/artifactory/lf-release-local/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -121,6 +125,13 @@
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
             <version>1.20.1-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.loverfella</groupId>
+            <artifactId>commons</artifactId>
+            <version>1.2.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

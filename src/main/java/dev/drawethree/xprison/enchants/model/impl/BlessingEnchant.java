@@ -3,6 +3,7 @@ package dev.drawethree.xprison.enchants.model.impl;
 import dev.drawethree.xprison.api.enums.ReceiveCause;
 import dev.drawethree.xprison.enchants.XPrisonEnchants;
 import dev.drawethree.xprison.enchants.model.XPrisonEnchantment;
+import dev.drawethree.xprison.manager.EventManager;
 import dev.drawethree.xprison.tokens.XPrisonTokens;
 import dev.drawethree.xprison.utils.player.PlayerUtils;
 import me.lucko.helper.utils.Players;
@@ -53,9 +54,16 @@ public final class BlessingEnchant extends XPrisonEnchantment {
             return;
         }
 
-        long amount = (long) createExpression(enchantLevel).evaluate();
 
-        for (Player p : Players.all()) {
+        var event = EventManager.callBlessingGiveTokensEvent(e.getPlayer(), (long) createExpression(enchantLevel).evaluate(), chance, Players.all());
+
+        if (!event.isCancelled())
+            return;
+
+        var amount = event.getTokenAmount();
+
+
+        for (var p : event.getRecipients()) {
             plugin.getCore().getTokens().getTokensManager().giveTokens(p, amount, null, ReceiveCause.MINING_OTHERS);
 
             if (!this.isMessagesEnabled()) {
