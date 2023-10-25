@@ -21,7 +21,7 @@ public class GivePickaxeCommand {
 
 	public void register() {
 		Commands.create()
-				.assertOp()
+				.assertPermission("xprison.command.givepickaxe")
 				.handler(c -> {
 
 					if (c.args().size() == 0) {
