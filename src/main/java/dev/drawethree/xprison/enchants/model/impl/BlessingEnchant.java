@@ -57,8 +57,10 @@ public final class BlessingEnchant extends XPrisonEnchantment {
 
         var event = EventManager.callBlessingGiveTokensEvent(e.getPlayer(), (long) createExpression(enchantLevel).evaluate(), chance, Players.all());
 
-        if (!event.isCancelled())
+        System.out.println(1);
+        if (event.isCancelled())
             return;
+        System.out.println(2);
 
         var amount = event.getTokenAmount();
 

@@ -15,7 +15,7 @@ public class BlessingGiveTokensEvent extends PlayerEvent implements Cancellable 
     private static final HandlerList HANDLER_LIST = new HandlerList();
 
     @Getter @Setter
-    private final Collection<Player> recipients;
+    private Collection<Player> recipients;
 
     @Getter @Setter
     private double chance;
