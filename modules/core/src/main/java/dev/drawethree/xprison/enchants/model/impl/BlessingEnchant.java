@@ -6,7 +6,6 @@ import dev.drawethree.xprison.enchants.model.XPrisonEnchantment;
 import dev.drawethree.xprison.manager.EventManager;
 import dev.drawethree.xprison.tokens.XPrisonTokens;
 import dev.drawethree.xprison.utils.player.PlayerUtils;
-import lombok.var;
 import me.lucko.helper.utils.Players;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;

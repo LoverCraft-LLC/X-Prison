@@ -1,7 +1,6 @@
 package dev.drawethree.xprison.manager;
 
 import dev.drawethree.xprison.event.BlessingGiveTokensEvent;
-import lombok.var;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
