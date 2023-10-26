@@ -62,15 +62,7 @@ public final class BlessingEnchant extends XPrisonEnchantment {
 
         var amount = event.getTokenAmount();
 
-
-        for (var p : event.getRecipients()) {
-            plugin.getCore().getTokens().getTokensManager().giveTokens(p, amount, null, ReceiveCause.MINING_OTHERS);
-
-            if (!this.isMessagesEnabled()) {
-                continue;
-            }
-
-        }
+        event.getRecipients().forEach(p -> plugin.getCore().getTokens().getTokensManager().giveTokens(p, amount, null, ReceiveCause.MINING_OTHERS));
     }
 
     @Override
