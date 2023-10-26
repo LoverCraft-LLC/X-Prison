@@ -57,10 +57,8 @@ public final class BlessingEnchant extends XPrisonEnchantment {
 
         var event = EventManager.callBlessingGiveTokensEvent(e.getPlayer(), (long) createExpression(enchantLevel).evaluate(), chance, Players.all());
 
-        System.out.println(1);
         if (event.isCancelled())
             return;
-        System.out.println(2);
 
         var amount = event.getTokenAmount();
 
@@ -72,11 +70,6 @@ public final class BlessingEnchant extends XPrisonEnchantment {
                 continue;
             }
 
-            if (p.equals(e.getPlayer())) {
-                PlayerUtils.sendMessage(p, plugin.getEnchantsConfig().getMessage("blessing_your").replace("%amount%", String.format("%,d", amount)));
-            } else {
-                PlayerUtils.sendMessage(p, plugin.getEnchantsConfig().getMessage("blessing_other").replace("%amount%", String.format("%,d", amount)).replace("%player%", e.getPlayer().getName()));
-            }
         }
     }
 
