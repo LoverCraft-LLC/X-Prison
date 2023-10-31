@@ -43,7 +43,6 @@ public final class BlessingEnchant extends XPrisonEnchantment {
 
     @Override
     public void onBlockBreak(BlockBreakEvent e, int enchantLevel) {
-
         if (!this.plugin.getCore().isModuleEnabled(XPrisonTokens.MODULE_NAME)) {
             return;
         }
@@ -54,15 +53,21 @@ public final class BlessingEnchant extends XPrisonEnchantment {
             return;
         }
 
-
         var event = EventManager.callBlessingGiveTokensEvent(e.getPlayer(), (long) createExpression(enchantLevel).evaluate(), chance, Players.all());
 
-        if (event.isCancelled())
+        if (event.isCancelled()) {
             return;
+        }
 
         var amount = event.getTokenAmount();
 
-        event.getRecipients().forEach(p -> plugin.getCore().getTokens().getTokensManager().giveTokens(p, amount, null, ReceiveCause.MINING_OTHERS));
+        for (var p : event.getRecipients()) {
+            if (!p.getWorld().getName().equals("mines")) {
+                continue;
+            }
+
+            plugin.getCore().getTokens().getTokensManager().giveTokens(p, amount, null, ReceiveCause.MINING_OTHERS);
+        }
     }
 
     @Override
