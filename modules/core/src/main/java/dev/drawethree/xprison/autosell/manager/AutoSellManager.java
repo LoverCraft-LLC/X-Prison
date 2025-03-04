@@ -6,6 +6,7 @@ import dev.drawethree.xprison.autosell.api.events.XPrisonSellAllEvent;
 import dev.drawethree.xprison.autosell.model.AutoSellItemStack;
 import dev.drawethree.xprison.autosell.model.SellRegion;
 import dev.drawethree.xprison.autosell.utils.AutoSellContants;
+import dev.drawethree.xprison.enchants.managers.EnchantsManager;
 import dev.drawethree.xprison.enchants.utils.EnchantUtils;
 import dev.drawethree.xprison.multipliers.enums.MultiplierType;
 import dev.drawethree.xprison.utils.compat.CompMaterial;
@@ -303,7 +304,13 @@ public class AutoSellManager {
     }
 
     private ItemStack createItemStackToGive(Player player, Block block) {
-        int amount = EnchantUtils.getFortuneBlockCount(player.getItemInHand(), block);
+        int amount = 1;
+
+        if (plugin.getCore().getEnchants().getEnchantsManager().getBoostedPlayers().containsKey(player.getUniqueId())) {
+            amount *= 2;
+        }
+
+        amount += EnchantUtils.getFortuneBlockCount(player.getItemInHand(), block);
 
         ItemStack toGive;
 

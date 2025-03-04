@@ -1,6 +1,7 @@
 package dev.drawethree.xprison.enchants.model.impl;
 
 import dev.drawethree.xprison.enchants.XPrisonEnchants;
+import dev.drawethree.xprison.enchants.managers.EnchantsManager;
 import dev.drawethree.xprison.enchants.model.XPrisonEnchantment;
 import dev.drawethree.xprison.tokens.api.events.XPrisonBlockBreakEvent;
 import dev.drawethree.xprison.utils.player.PlayerUtils;
@@ -19,16 +20,18 @@ import java.util.concurrent.TimeUnit;
 
 public final class BlockBoosterEnchant extends XPrisonEnchantment {
 
-    private static final Map<UUID, Long> BOOSTED_PLAYERS = new HashMap<>();
+    private static EnchantsManager enchantsManager;
     private double chance;
 
     public BlockBoosterEnchant(XPrisonEnchants instance) {
         super(instance, 17);
+        enchantsManager = instance.getEnchantsManager();
+
         this.chance = plugin.getEnchantsConfig().getYamlConfig().getDouble("enchants." + id + ".Chance");
 
         Events.subscribe(XPrisonBlockBreakEvent.class)
                 .handler(e -> {
-                    if (BOOSTED_PLAYERS.containsKey(e.getPlayer().getUniqueId())) {
+                    if (enchantsManager.getBoostedPlayers().containsKey(e.getPlayer().getUniqueId())) {
                         List<Block> blocks = new ArrayList<>();
                         for (Block b : e.getBlocks()) {
                             blocks.add(b);
@@ -40,16 +43,16 @@ public final class BlockBoosterEnchant extends XPrisonEnchantment {
     }
 
     public static boolean hasBlockBoosterRunning(Player p) {
-        return BOOSTED_PLAYERS.containsKey(p.getUniqueId());
+        return enchantsManager.getBoostedPlayers().containsKey(p.getUniqueId());
     }
 
     public static String getTimeLeft(Player p) {
 
-        if (!BOOSTED_PLAYERS.containsKey(p.getUniqueId())) {
+        if (!enchantsManager.getBoostedPlayers().containsKey(p.getUniqueId())) {
             return "";
         }
 
-        long endTime = BOOSTED_PLAYERS.get(p.getUniqueId());
+        long endTime = enchantsManager.getBoostedPlayers().get(p.getUniqueId());
 
         if (System.currentTimeMillis() > endTime) {
             return "";
@@ -98,13 +101,14 @@ public final class BlockBoosterEnchant extends XPrisonEnchantment {
 
         PlayerUtils.sendMessage(e.getPlayer(), this.plugin.getEnchantsConfig().getMessage("block_booster_on"));
 
-        BOOSTED_PLAYERS.put(e.getPlayer().getUniqueId(), Time.nowMillis() + TimeUnit.MINUTES.toMillis(1));
+        enchantsManager.getBoostedPlayers().put(e.getPlayer().getUniqueId(), Time.nowMillis() + TimeUnit.MINUTES.toMillis(1));
 
         Schedulers.sync().runLater(() -> {
             if (e.getPlayer().isOnline()) {
                 PlayerUtils.sendMessage(e.getPlayer(), this.plugin.getEnchantsConfig().getMessage("block_booster_off"));
             }
-            BOOSTED_PLAYERS.remove(e.getPlayer().getUniqueId());
+
+            enchantsManager.getBoostedPlayers().remove(e.getPlayer().getUniqueId());
         }, 5, TimeUnit.MINUTES);
 
     }

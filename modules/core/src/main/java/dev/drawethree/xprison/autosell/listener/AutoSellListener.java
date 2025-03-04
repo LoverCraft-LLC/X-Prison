@@ -6,6 +6,7 @@ import dev.drawethree.xprison.utils.compat.CompMaterial;
 import dev.drawethree.xprison.utils.player.PlayerUtils;
 import me.lucko.helper.Events;
 import me.lucko.helper.Schedulers;
+import org.bukkit.block.Block;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -50,8 +51,9 @@ public class AutoSellListener {
         Events.subscribe(BlockBreakEvent.class, EventPriority.HIGHEST)
                 .filter(e -> !e.isCancelled() && e.getPlayer().getItemInHand() != null && this.plugin.getCore().isPickaxeSupported(e.getPlayer().getItemInHand().getType()))
                 .handler(e -> {
+                    Block block = e.getBlock();
 
-                    SellRegion sellRegion = this.plugin.getManager().getAutoSellRegion(e.getBlock().getLocation());
+                    SellRegion sellRegion = this.plugin.getManager().getAutoSellRegion(block.getLocation());
 
                     if (sellRegion == null) {
                         return;
@@ -60,15 +62,15 @@ public class AutoSellListener {
                     boolean success = false;
 
                     if (this.plugin.getManager().hasAutoSellEnabled(e.getPlayer())) {
-                        success = this.plugin.getManager().autoSellBlock(e.getPlayer(), e.getBlock());
+                        success = this.plugin.getManager().autoSellBlock(e.getPlayer(), block);
                     }
 
                     if (!success) {
-                        success = this.plugin.getManager().givePlayerItem(e.getPlayer(), e.getBlock());
+                        success = this.plugin.getManager().givePlayerItem(e.getPlayer(), block);
                     }
 
                     if (success) {
-                        e.getBlock().setType(CompMaterial.AIR.toMaterial());
+                        block.setType(CompMaterial.AIR.toMaterial());
                     } else {
                         e.setCancelled(true);
                     }

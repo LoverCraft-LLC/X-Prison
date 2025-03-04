@@ -17,6 +17,7 @@ import dev.drawethree.xprison.utils.item.ItemStackBuilder;
 import dev.drawethree.xprison.utils.misc.RegionUtils;
 import dev.drawethree.xprison.utils.player.PlayerUtils;
 import dev.drawethree.xprison.utils.text.TextUtils;
+import lombok.Getter;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.lucko.helper.Events;
 import me.lucko.helper.Schedulers;
@@ -41,10 +42,13 @@ public class EnchantsManager {
 
     private final XPrisonEnchants plugin;
     private final List<UUID> lockedPlayers;
+    @Getter
+    private final Map<UUID, Long> boostedPlayers;
 
     public EnchantsManager(XPrisonEnchants plugin) {
         this.plugin = plugin;
         this.lockedPlayers = Collections.synchronizedList(new ArrayList<>());
+        this.boostedPlayers = new HashMap<>();
     }
 
     public Map<XPrisonEnchantment, Integer> getItemEnchants(ItemStack itemStack) {
@@ -575,4 +579,5 @@ public class EnchantsManager {
     public void giveFirstJoinPickaxe(Player target) {
         target.getInventory().addItem(this.createFirstJoinPickaxe(target));
     }
+
 }

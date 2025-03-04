@@ -14,9 +14,9 @@ public final class EnchantUtils {
 
     public static int getFortuneBlockCount(ItemStack pickaxe, Block block) {
         if (FortuneEnchant.isBlockBlacklisted(block)) {
-            return 1;
+            return 0;
         }
-        return getItemFortuneLevel(pickaxe) + 1;
+        return getItemFortuneLevel(pickaxe);
     }
 
     public static int getItemFortuneLevel(ItemStack item) {
