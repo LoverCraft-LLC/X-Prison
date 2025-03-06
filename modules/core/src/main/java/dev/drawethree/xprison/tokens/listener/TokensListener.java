@@ -34,7 +34,7 @@ public class TokensListener {
 	}
 
 	private void subscribeToBlockBreakEvent() {
-		Events.subscribe(BlockBreakEvent.class, EventPriority.HIGHEST)
+		Events.subscribe(BlockBreakEvent.class, EventPriority.MONITOR)
 				.filter(e -> !e.isCancelled())
 				.filter(e -> e.getPlayer().getItemInHand() != null && this.plugin.getCore().isPickaxeSupported(e.getPlayer().getItemInHand().getType()))
 				.handler(e -> {
