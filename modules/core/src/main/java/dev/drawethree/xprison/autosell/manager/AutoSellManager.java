@@ -160,6 +160,8 @@ public class AutoSellManager {
 
         if (totalAmount > 0.0) {
             PlayerUtils.sendMessage(sender, this.plugin.getAutoSellConfig().getMessage("sell_all_complete").replace("%price%", String.format("%,.0f", totalAmount)));
+        } else {
+            PlayerUtils.sendMessage(sender, this.plugin.getAutoSellConfig().getMessage("sell_all_nothing"));
         }
     }
 
