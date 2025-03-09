@@ -140,6 +140,9 @@ public final class ExplosiveEnchant extends XPrisonEnchantment {
         boolean autoSellPlayerEnabled = this.plugin.isAutoSellModuleEnabled() && plugin.getCore().getAutoSell().getManager().hasAutoSellEnabled(p);
 
         for (Block block : blocksAffected) {
+            Material blockType = block.getType();
+
+            if (blockType == Material.BEDROCK || blockType == Material.LADDER) continue;
 
             int amplifier = fortuneLevel;
 
