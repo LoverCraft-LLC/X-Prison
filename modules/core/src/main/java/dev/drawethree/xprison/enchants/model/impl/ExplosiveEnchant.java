@@ -142,7 +142,7 @@ public final class ExplosiveEnchant extends XPrisonEnchantment {
         for (Block block : blocksAffected) {
             Material blockType = block.getType();
 
-            if (blockType == Material.BEDROCK || blockType == Material.LADDER) continue;
+            if (blockType == Material.BEDROCK || blockType == Material.LADDER || blockType == Material.LIGHT) continue;
 
             int amplifier = fortuneLevel;
 

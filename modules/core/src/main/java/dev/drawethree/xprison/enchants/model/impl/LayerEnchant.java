@@ -120,6 +120,8 @@ public final class LayerEnchant extends XPrisonEnchantment {
         boolean autoSellPlayerEnabled = this.plugin.isAutoSellModuleEnabled() && plugin.getCore().getAutoSell().getManager().hasAutoSellEnabled(p);
 
         for (Block block : blocksAffected) {
+            Material blockType = block.getType();
+            if (blockType == Material.BEDROCK || blockType == Material.LADDER || blockType == Material.LIGHT) continue;
 
             int amplifier = fortuneLevel;
             if (FortuneEnchant.isBlockBlacklisted(block)) {
