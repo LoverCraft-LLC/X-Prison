@@ -6,7 +6,6 @@ import dev.drawethree.xprison.autosell.api.events.XPrisonSellAllEvent;
 import dev.drawethree.xprison.autosell.model.AutoSellItemStack;
 import dev.drawethree.xprison.autosell.model.SellRegion;
 import dev.drawethree.xprison.autosell.utils.AutoSellContants;
-import dev.drawethree.xprison.enchants.managers.EnchantsManager;
 import dev.drawethree.xprison.enchants.utils.EnchantUtils;
 import dev.drawethree.xprison.multipliers.enums.MultiplierType;
 import dev.drawethree.xprison.utils.compat.CompMaterial;
@@ -156,7 +155,10 @@ public class AutoSellManager {
 
         double totalAmount = this.sellItems(sender, itemsToSell);
 
-        itemsToSell.keySet().forEach(item -> sender.getInventory().remove(item.getItemStack()));
+        itemsToSell.keySet().forEach(item -> {
+            sender.getInventory().remove(item.getItemStack());
+            if (sender.getInventory().getItemInOffHand().isSimilar(item.getItemStack())) sender.getInventory().setItemInOffHand(null);
+        });
 
         if (totalAmount > 0.0) {
             PlayerUtils.sendMessage(sender, this.plugin.getAutoSellConfig().getMessage("sell_all_complete").replace("%price%", String.format("%,.0f", totalAmount)));
