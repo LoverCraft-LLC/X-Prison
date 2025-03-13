@@ -11,7 +11,7 @@ import org.codemc.worldguardwrapper.region.IWrappedRegion;
 
 public class SellAllCommand {
 
-    private static final String COMMAND_NAME = "sellall";
+    private static final String[] COMMAND_ALIASES = {"sellall", "sellallinv", "sell", "sellinv", "sellallinventory"};
     private final XPrisonAutoSell plugin;
 
     public SellAllCommand(XPrisonAutoSell plugin) {
@@ -31,7 +31,7 @@ public class SellAllCommand {
 
                     this.plugin.getManager().sellAll(c.sender(), region);
 
-                }).registerAndBind(this.plugin.getCore(), COMMAND_NAME);
+                }).registerAndBind(this.plugin.getCore(), COMMAND_ALIASES);
     }
 
     private IWrappedRegion parseRegionFromCommandContext(CommandContext<Player> c) {

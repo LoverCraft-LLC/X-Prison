@@ -132,6 +132,7 @@ public class AutoSellManager {
     public void sellAll(Player sender, IWrappedRegion region) {
 
         if (!this.validateRegionBeforeSellAll(sender, region)) {
+            PlayerUtils.sendMessage(sender, "&e&l(!) &cYou must be in a mine area to use /sellall");
             return;
         }
 
