@@ -182,7 +182,6 @@ public class EnchantsManager {
         nbtItem.setLong("blocks-broken", nbtItem.getLong("blocks-broken") + amount);
 
         ItemStack item = nbtItem.getItem();
-        applyLoreToPickaxe(p, item);
         p.setItemInHand(item);
     }
 
