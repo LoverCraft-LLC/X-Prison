@@ -5,37 +5,40 @@ import org.bukkit.ChatColor;
 
 public class ProgressBar {
 
-	static final ChatColor AVAILABLE_COLOR = ChatColor.GREEN;
-	static final ChatColor NOT_AVAILABLE_COLOR = ChatColor.RED;
-	static final String DEFAULT_DELIMITER = ":";
+    static final ChatColor AVAILABLE_COLOR = ChatColor.GREEN;
+    static final ChatColor NOT_AVAILABLE_COLOR = ChatColor.RED;
+    static final String DEFAULT_DELIMITER = ":";
+    static final int MAX_DELIMITERS = 30;
 
-	public static String getProgressBar(int amountOfDelimeters, String delimeter, double current, double required) {
+    public static String getProgressBar(int amountOfDelimeters, String delimeter, double current, double required) {
 
-		if (delimeter == null || delimeter.isEmpty()) {
-			delimeter = DEFAULT_DELIMITER;
-		}
+        if (delimeter == null || delimeter.isEmpty()) {
+            delimeter = DEFAULT_DELIMITER;
+        }
 
-		if (current > required) {
-			current = required;
-		}
+        amountOfDelimeters = Math.min(amountOfDelimeters, MAX_DELIMITERS);
 
-		double treshold = required / amountOfDelimeters;
-		int numberOfGreens = (int) (current / treshold);
+        if (current > required) {
+            current = required;
+        }
 
-		StringBuilder result = new StringBuilder();
+        double treshold = required / amountOfDelimeters;
+        int numberOfGreens = (int) (current / treshold);
 
-		result.append(AVAILABLE_COLOR);
-		for (int i = 0; i < numberOfGreens; i++) {
-			result.append(delimeter);
-		}
-		result.append(NOT_AVAILABLE_COLOR);
-		for (int i = 0; i < amountOfDelimeters - numberOfGreens; i++) {
-			result.append(delimeter);
-		}
-		return TextUtils.applyColor(result.toString());
-	}
+        String result = AVAILABLE_COLOR +
+                delimeter.repeat(Math.max(0, numberOfGreens)) +
+                NOT_AVAILABLE_COLOR +
+                delimeter.repeat(Math.max(0, amountOfDelimeters - numberOfGreens));
 
-	private ProgressBar() {
-		throw new UnsupportedOperationException("Cannot instantiate");
-	}
+        String progressBar = TextUtils.applyColor(result);
+        if (progressBar.length() > 256) {
+            progressBar = progressBar.substring(0, 256);
+        }
+
+        return progressBar;
+    }
+
+    private ProgressBar() {
+        throw new UnsupportedOperationException("Cannot instantiate");
+    }
 }
