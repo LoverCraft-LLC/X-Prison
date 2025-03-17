@@ -2,6 +2,9 @@ package dev.drawethree.xprison.pickaxelevels.listener;
 
 import dev.drawethree.xprison.pickaxelevels.XPrisonPickaxeLevels;
 import me.lucko.helper.Events;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -29,13 +32,13 @@ public final class PickaxeLevelsListener {
     }
 
     private void subscribeToBlockBreakEvent() {
-//		Events.subscribe(BlockBreakEvent.class, EventPriority.HIGHEST)
-//				.filter(e -> !e.isCancelled())
-//				.filter(e -> e.getPlayer().getItemInHand() != null && this.plugin.getCore().isPickaxeSupported(e.getPlayer().getItemInHand().getType()))
-//				.handler(e -> {
-//					ItemStack pickaxe = e.getPlayer().getItemInHand();
-//					Player player = e.getPlayer();
-//					this.plugin.getPickaxeLevelsManager().updatePickaxeLevel(player, pickaxe);
-//				}).bindWith(this.plugin.getCore());
+		Events.subscribe(BlockBreakEvent.class, EventPriority.MONITOR)
+				.filter(e -> !e.isCancelled())
+				.filter(e -> e.getPlayer().getItemInHand() != null && this.plugin.getCore().isPickaxeSupported(e.getPlayer().getItemInHand().getType()))
+				.handler(e -> {
+					ItemStack pickaxe = e.getPlayer().getItemInHand();
+					Player player = e.getPlayer();
+					this.plugin.getPickaxeLevelsManager().updatePickaxeLevel(player, pickaxe);
+				}).bindWith(this.plugin.getCore());
     }
 }
