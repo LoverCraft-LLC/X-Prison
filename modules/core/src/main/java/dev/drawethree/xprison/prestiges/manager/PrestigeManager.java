@@ -16,6 +16,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -49,21 +50,21 @@ public class PrestigeManager {
         }
     }
 
-	public void savePlayerData(Player player, boolean removeFromCache, boolean async) {
-		if (async) {
-			Schedulers.async().run(() -> savePlayerDataLogic(player, removeFromCache));
-		} else {
-			savePlayerDataLogic(player, removeFromCache);
-		}
-	}
+    public void savePlayerData(Player player, boolean removeFromCache, boolean async) {
+        if (async) {
+            Schedulers.async().run(() -> savePlayerDataLogic(player, removeFromCache));
+        } else {
+            savePlayerDataLogic(player, removeFromCache);
+        }
+    }
 
-	private void savePlayerDataLogic(Player player, boolean removeFromCache) {
+    private void savePlayerDataLogic(Player player, boolean removeFromCache) {
         this.plugin.getPrestigeService().setPrestige(player, this.getPlayerPrestige(player).getId());
-		if (removeFromCache) {
-			this.onlinePlayersPrestige.remove(player.getUniqueId());
-		}
+        if (removeFromCache) {
+            this.onlinePlayersPrestige.remove(player.getUniqueId());
+        }
         this.plugin.getCore().debug("Saved " + player.getName() + "'s prestige to database.", this.plugin);
-	}
+    }
 
 
     public void loadPlayerPrestige(Player player) {
@@ -137,8 +138,20 @@ public class PrestigeManager {
         return this.getPlayerPrestige(p).getId() == this.getConfig().getMaxPrestige().getId();
     }
 
+    public boolean hasMinedBlocksRequirement(Player player) {
+        long currentMinedBlocks = this.plugin.getCore().getTokens().getBlocksService().getPlayerBrokenBlocks(player);
+        return currentMinedBlocks >= getMinedBlocksRequirement(player);
+    }
+
+    public long getMinedBlocksRequirement(Player player) {
+        long base = 20000;
+        long prestige = this.getPlayerPrestige(player).getId();
+        double multiplier = 2.5;
+        return base * prestige * (long) multiplier;
+    }
+
     private boolean completeTransaction(Player p, double cost) {
-		if (this.getConfig().isUseTokensCurrency()) {
+        if (this.getConfig().isUseTokensCurrency()) {
             this.plugin.getCore().getTokens().getApi().removeTokens(p, (long) cost, LostCause.RANKUP);
             return true;
         } else {
@@ -164,6 +177,11 @@ public class PrestigeManager {
 
         if (isMaxPrestige(p)) {
             PlayerUtils.sendMessage(p, this.getConfig().getMessage("last_prestige"));
+            return false;
+        }
+
+        if (!hasMinedBlocksRequirement(p) && getPlayerPrestige(p).getId() >= 2) {
+            PlayerUtils.sendMessage(p, "&e&l(!) &eYou need to mine &b" + NumberFormat.getInstance().format(getMinedBlocksRequirement(p)) + " &eblocks in order to prestige!");
             return false;
         }
 
@@ -200,7 +218,7 @@ public class PrestigeManager {
         List<String> prestigeTopFormat = this.getConfig().getPrestigeTopFormat();
         Map<UUID, Long> topPrestige = this.plugin.getPrestigeService().getTopPrestiges(this.getConfig().getTopPlayersAmount());
 
-		for (String s : prestigeTopFormat) {
+        for (String s : prestigeTopFormat) {
             if (s.startsWith("{FOR_EACH_PLAYER}")) {
                 String rawContent = s.replace("{FOR_EACH_PLAYER} ", "");
                 for (int i = 0; i < 10; i++) {
@@ -235,6 +253,11 @@ public class PrestigeManager {
 
             if (isMaxPrestige(p)) {
                 PlayerUtils.sendMessage(p, this.getConfig().getMessage("last_prestige"));
+                return;
+            }
+
+            if (!hasMinedBlocksRequirement(p) && getPlayerPrestige(p).getId() >= 2) {
+                PlayerUtils.sendMessage(p, "&e&l(!) &eYou need to mine &b" + NumberFormat.getInstance().format(getMinedBlocksRequirement(p)) + " &eblocks in order to prestige!");
                 return;
             }
 
@@ -287,7 +310,7 @@ public class PrestigeManager {
 
         this.onlinePlayersPrestige.put(p.getUniqueId(), nextPrestige.getId());
 
-        givePrestigeRewards(nextPrestige,p);
+        givePrestigeRewards(nextPrestige, p);
 
         List<String> rewardsPerPrestige = this.getConfig().getUnlimitedPrestigesRewardPerPrestige();
         if (rewardsPerPrestige != null) {
@@ -333,7 +356,7 @@ public class PrestigeManager {
                 break;
             }
 
-            givePrestigeRewards(toGive,target);
+            givePrestigeRewards(toGive, target);
 
             List<String> rewardsPerPrestige = this.getConfig().getUnlimitedPrestigesRewardPerPrestige();
             if (rewardsPerPrestige != null) {
@@ -439,7 +462,7 @@ public class PrestigeManager {
         this.loadAllData();
     }
 
-	public void disable() {
-		this.saveAllDataSync();
-	}
+    public void disable() {
+        this.saveAllDataSync();
+    }
 }
