@@ -16,7 +16,7 @@ public class GiveFirstJoinPickaxeCommand {
 
 	public void register() {
 		Commands.create()
-				.assertOp()
+				.assertPermission("xprison.command.givefirstjoinpickaxe")
 				.handler(c -> {
 
 					if (c.args().size() == 0) {
